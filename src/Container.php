@@ -36,19 +36,6 @@ final class Container implements ContainerInterface
         return $this->instances[$id];
     }
 
-    public function getReflectionClass(string $id): ReflectionClass
-    {
-        if (!class_exists(class: $id)) {
-            throw new NotFoundException(message: "Class {$id} was not found");
-        }
-        $reflectionClass = new ReflectionClass(objectOrClass: $id);
-        if (!$reflectionClass->isInstantiable()) {
-            throw new ContainerException(message: "Class {$id} is not instantiable");
-        }
-
-        return $reflectionClass;
-    }
-
     public function has(string $id): bool
     {
         return isset($this->instances[$id]);
@@ -61,6 +48,19 @@ final class Container implements ContainerInterface
         } else {
             $this->instances[$id] = $this->resolve(id: $concrete);
         }
+    }
+
+    private function getReflectionClass(string $id): ReflectionClass
+    {
+        if (!class_exists(class: $id)) {
+            throw new NotFoundException(message: "Class {$id} was not found");
+        }
+        $reflectionClass = new ReflectionClass(objectOrClass: $id);
+        if (!$reflectionClass->isInstantiable()) {
+            throw new ContainerException(message: "Class {$id} is not instantiable");
+        }
+
+        return $reflectionClass;
     }
 
     private function resolve(string $id): object
