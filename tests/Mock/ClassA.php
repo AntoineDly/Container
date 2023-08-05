@@ -13,7 +13,16 @@ declare(strict_types=1);
 
 namespace AntoineDly\Container\Mock;
 
-final class Class2
+abstract class ClassA implements ClassAInterface
 {
+    public function __construct(
+        public ClassBInterface $classb,
+        public ?string $something,
+        public string $somethingElse = 'somethingElse'
+    ) {
+    }
 
+    public function aMethod(): void
+    {
+    }
 }

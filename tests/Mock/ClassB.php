@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace AntoineDly\Container\Mock;
 
-interface ClassInterface
+final class ClassB implements ClassBInterface
 {
-
 }

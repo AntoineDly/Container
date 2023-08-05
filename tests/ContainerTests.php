@@ -13,8 +13,12 @@ declare(strict_types=1);
 
 namespace AntoineDly\Container;
 
-use AntoineDly\Container\Mock\Class1;
-use AntoineDly\Container\Mock\ClassInterface;
+use AntoineDly\Container\Mock\ClassA;
+use AntoineDly\Container\Mock\ClassB;
+use AntoineDly\Container\Mock\ClassC;
+use AntoineDly\Container\Mock\ClassD;
+use AntoineDly\Container\Mock\ClassAInterface;
+use AntoineDly\Container\Mock\ClassBInterface;
 use PHPUnit\Framework\TestCase;
 
 final class ContainerTests extends TestCase
@@ -26,9 +30,30 @@ final class ContainerTests extends TestCase
         $this->container = new Container();
     }
 
-    public function testContainerGet(): void
+    public function testContainerGetSuccessfull(): void
     {
-        $this->container->set(id: ClassInterface::class, concrete: Class1::class);
-        $this->assertInstanceOf(expected: Class1::class, actual: $this->container->get(id: ClassInterface::class));
+        $this->container->set(id: ClassBInterface::class, concrete: ClassB::class);
+        $this->container->set(id: ClassAInterface::class, concrete: ClassC::class);
+        $this->assertInstanceOf(expected: ClassC::class, actual: $this->container->get(id: ClassAInterface::class));
+        $this->assertInstanceOf(expected: ClassB::class, actual: $this->container->get(id: ClassBInterface::class));
+    }
+
+    public function testContainerGetErrorAbstractClass(): void
+    {
+        $this->container->set(id: ClassBInterface::class, concrete: ClassB::class);
+        $this->expectExceptionMessage(message: 'Class AntoineDly\Container\Mock\ClassA is not instantiable');
+        $this->container->set(id: ClassAInterface::class, concrete: ClassA::class);
+    }
+
+    public function testContainerGetErrorParameters(): void
+    {
+        $this->expectExceptionMessage(message: 'Class string was not found');
+        $this->container->set(id: ClassD::class, concrete: ClassD::class);
+    }
+
+    public function testContainerSetError(): void
+    {
+        $this->expectExceptionMessage(message: 'Class a string was not found');
+        $this->container->set(id: ClassD::class, concrete: 'a string');
     }
 }

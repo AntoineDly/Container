@@ -77,6 +77,11 @@ final class Container implements ContainerInterface
                 if ($param->isDefaultValueAvailable() || $param->isOptional()) {
                     return $param->getDefaultValue();
                 }
+
+                if ($param->allowsNull()) {
+                    return null;
+                }
+
                 $className = $param->getName();
                 $classType = $param->getType();
                 return $this->resolveClass(name: $className, type: $classType, id :$id);
