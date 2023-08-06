@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace AntoineDly\Container;
 
+use AntoineDly\Container\Exception\ContainerException;
+use AntoineDly\Container\Exception\NotFoundException;
 use AntoineDly\Container\Mock\ClassA;
 use AntoineDly\Container\Mock\ClassB;
 use AntoineDly\Container\Mock\ClassC;
@@ -41,18 +43,21 @@ final class ContainerTests extends TestCase
     public function testContainerGetErrorAbstractClass(): void
     {
         $this->container->set(id: ClassBInterface::class, concrete: ClassB::class);
+        $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(message: 'Class AntoineDly\Container\Mock\ClassA is not instantiable');
         $this->container->set(id: ClassAInterface::class, concrete: ClassA::class);
     }
 
     public function testContainerGetErrorParameters(): void
     {
+        $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage(message: 'Class string was not found');
         $this->container->set(id: ClassD::class, concrete: ClassD::class);
     }
 
     public function testContainerSetError(): void
     {
+        $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage(message: 'Class a string was not found');
         $this->container->set(id: ClassD::class, concrete: 'a string');
     }
